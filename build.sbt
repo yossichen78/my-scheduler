@@ -1,4 +1,4 @@
-organization  := "com.example"
+organization  := "com.scheduler"
 
 version       := "0.1"
 
@@ -15,6 +15,8 @@ libraryDependencies ++= {
     "org.slf4j" % "log4j-over-slf4j" % "1.7.10",
     "ch.qos.logback" % "logback-classic" % "1.1.3",
     "io.spray"            %%  "spray-can"     % sprayV,
+    "io.spray"            %%  "spray-caching"     % sprayV,
+    "io.spray" %%  "spray-json" % "1.3.2",
     "io.spray"            %%  "spray-routing" % sprayV,
     "io.spray"            %%  "spray-testkit" % sprayV  % "test",
     "com.typesafe.akka"   %%  "akka-actor"    % akkaV,

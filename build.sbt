@@ -10,6 +10,10 @@ libraryDependencies ++= {
   val akkaV = "2.3.9"
   val sprayV = "1.3.3"
   Seq(
+    "ch.qos.logback" % "logback-classic" % "1.1.3",
+    "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0",
+    "org.slf4j" % "log4j-over-slf4j" % "1.7.10",
+    "ch.qos.logback" % "logback-classic" % "1.1.3",
     "io.spray"            %%  "spray-can"     % sprayV,
     "io.spray"            %%  "spray-routing" % sprayV,
     "io.spray"            %%  "spray-testkit" % sprayV  % "test",

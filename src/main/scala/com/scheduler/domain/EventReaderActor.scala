@@ -1,6 +1,7 @@
 package com.scheduler.domain
 
 import akka.actor.Actor
+import com.scheduler.dao.ScheduleDao
 import com.typesafe.scalalogging.LazyLogging
 
 /**
@@ -8,15 +9,13 @@ import com.typesafe.scalalogging.LazyLogging
   */
 class EventReaderActor extends Actor with LazyLogging {
   def receive = {
-    case "checkDB" => logger.debug("checking db")
+    case "checkDB" =>
+      logger.debug("checking db")
+      val list = ScheduleDao.getNextMinuteEvents
+      logger.debug("found "+list.length+" events")
+      for (item <- list) yield {
+        logger.debug(item.toString)
+      }
   }
 }
 
-class Schedule extends Actor with LazyLogging {
-  var eventList = List[ScheduleEntryJson]()
-  def receive = {
-    case AddEvent(entry) => eventList = eventList :+ entry
-    case GetNextMinuteEvents =>
-
-  }
-}

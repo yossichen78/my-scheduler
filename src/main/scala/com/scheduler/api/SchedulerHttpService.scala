@@ -1,17 +1,16 @@
 package com.scheduler.api
 
 import akka.actor.Actor
+import com.scheduler.dao.{SelectException, InsertException, ConnectionException}
 import com.scheduler.domain.{SchedulerService, ScheduleEntryJson}
 import com.typesafe.scalalogging.LazyLogging
 import spray.http.MediaTypes._
 import spray.routing._
 import spray.json.DefaultJsonProtocol
 
-
 class SchedulerHttpServiceActor extends Actor with SchedulerHttpService  {
 
   def actorRefFactory = context
-
   def receive = runRoute(myRoute)
 }
 
@@ -23,7 +22,7 @@ object JsonImplicits extends DefaultJsonProtocol {
  trait SchedulerHttpService extends HttpService with LazyLogging with spray.httpx.SprayJsonSupport {
 
   val schedulerService = new SchedulerService
-  val myRoute = {
+  val myRoute = handleExceptions(myExceptionHandler) {
     import JsonImplicits._
 
     path("") { //sends events to the schedule
@@ -33,8 +32,9 @@ object JsonImplicits extends DefaultJsonProtocol {
             detach() {
               complete {
                 logger.debug("API received event: "+entry.toString)
-                schedulerService.handlePostRequest(entry)
-                "Event Received"
+                schedulerService.handlePostRequest(entry) match {
+                  case entry: ScheduleEntryJson => "Event Received"
+                }
               }
             }
           }
@@ -57,9 +57,9 @@ object JsonImplicits extends DefaultJsonProtocol {
                 <thead>
                   <tr>
                     <td>Creator Name:</td>
-                    <td>Action Type:</td>
-                    <td>Action Time:</td>
-                    <td>Action Target:</td>
+                    <td>Event Type:</td>
+                    <td>Event Time:</td>
+                    <td>Event Target:</td>
                   </tr>
                 </thead>
                   <tbody>
@@ -67,7 +67,7 @@ object JsonImplicits extends DefaultJsonProtocol {
                     <tr>
                       <td>{entry.creator_name}</td>
                       <td>{entry.event_type}</td>
-                      <td>{entry.action_time}</td>
+                      <td>{entry.event_time}</td>
                       <td>{entry.event_target}</td>
                     </tr>
                     }
@@ -80,6 +80,26 @@ object JsonImplicits extends DefaultJsonProtocol {
       }
     }
   }
+
+
+   implicit def myExceptionHandler: ExceptionHandler =
+     ExceptionHandler {
+       case exception: ConnectionException =>
+         logger.error(s"ConnectionException", exception)
+         complete("ConnectionException: "+exception.getMessage)
+       case exception: InsertException =>
+         logger.error(s"InsertException", exception)
+         complete("InsertException: "+exception.getMessage)
+       case exception: SelectException =>
+         logger.error(s"SelectException", exception)
+         complete("SelectException: "+exception.getMessage)
+       case exception: IllegalArgumentException =>
+         logger.error(s"Invalid value", exception)
+         complete("IllegalArgumentException: "+exception.getMessage)
+       case _ : Exception =>
+         logger.error(s"Unknown Error")
+         complete("Unknown Error")
+     }
 
 }
 

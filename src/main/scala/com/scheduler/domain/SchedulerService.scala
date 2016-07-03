@@ -11,11 +11,9 @@ import com.typesafe.scalalogging.LazyLogging
   */
 class SchedulerService extends LazyLogging {
 
-  var eventList = List[ScheduleEntryJson]()
-
   def handlePostRequest (entry: ScheduleEntryJson): ScheduleEntryJson = {
     Timestamp.valueOf(entry.event_time) // this ensures event time is a valid timestamp string
-    entry.event_type match { // todo: use enums
+    entry.event_type match { //
       case "welcome_email" | "clear_cache" | "meeting_reminder" =>
       case _ => throw new IllegalArgumentException("allowed values for event_type: \"welcome_email\" | \"clear_cache\" | \"meeting_reminder\"")
     }
@@ -23,7 +21,7 @@ class SchedulerService extends LazyLogging {
       case "" => throw new IllegalArgumentException("creator_name can't be empty")
       case _ =>
     }
-    entry.event_target match { // todo: target should match event_type ie should sometimes be an email etc
+    entry.event_target match {
       case "" => throw new IllegalArgumentException("event_target can't be empty")
       case _ =>
     }

@@ -42,8 +42,6 @@ class SchedulerHttpServiceSpec extends Specification with Specs2RouteTest with S
 
     "POST request must contain json" in {
       Post() ~> sealRoute(myRoute) ~> check {
-        logger.debug(responseAs[String])
-
         status.toString must_== "400 Bad Request"
         responseAs[String] must contain("Request entity expected but not supplied")
       }
@@ -54,12 +52,9 @@ class SchedulerHttpServiceSpec extends Specification with Specs2RouteTest with S
     val nowString = sdf.format(currentMiliseconds)
 
     "POST Json with valid fields should be accepted" in {
-      logger.debug(nowString)
       Post("/", HttpEntity(MediaTypes.`application/json`,
         """{"creator_name":"foo", "event_type":"clear_cache", "event_target":"resource1", "event_time":""""+nowString+"""" }""")
       ) ~> sealRoute(myRoute) ~> check {
-        logger.debug(responseAs[String])
-
         status.toString must_== "201 Created"
         responseAs[String] must contain("Event Received")
       }
@@ -71,8 +66,6 @@ class SchedulerHttpServiceSpec extends Specification with Specs2RouteTest with S
       Post("/", HttpEntity(MediaTypes.`application/json`,
         """{"creatorr_name":"foo", "event_type":"clear_cache", "event_target":"resource1", "event_time":"0-07-03 22:33:33" }""")
       ) ~> sealRoute(myRoute) ~> check {
-        logger.debug(responseAs[String])
-
         status.toString must_== "400 Bad Request"
         responseAs[String] must contain("Object is missing required member 'creator_name")
       }
@@ -90,8 +83,6 @@ class SchedulerHttpServiceSpec extends Specification with Specs2RouteTest with S
       Post("/", HttpEntity(MediaTypes.`application/json`,
         """{"creator_name":"foo2", "event_type":"clear_cache", "event_target":"resource1", "event_time":"0-04-11 2:24:56" }""")
       ) ~> sealRoute(myRoute) ~> check {
-        logger.debug(responseAs[String])
-
         status.toString must_== "400 Bad Request"
         responseAs[String] must contain("Timestamp format must be yyyy-mm-dd hh:mm:ss")
       }

@@ -41,7 +41,6 @@ object ScheduleDao extends LazyLogging {
       val statement = connection.createStatement()
       val statementString = "INSERT INTO schedule (`creator_name`,`event_type`,`event_target`,`event_time`) " +
         "VALUES ('" + entry.creator_name + "','" + entry.event_type + "','" + entry.event_target + "','" + entry.event_time + "')"
-      logger.debug(statementString)
       val resultSet = statement.executeUpdate(statementString)
       connection.close()
       if (resultSet == 1){
@@ -70,12 +69,10 @@ object ScheduleDao extends LazyLogging {
       val sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
       val nowMilis = new java.util.Date(roundedToMinutes)
       val nowPlusMinuteMilis = new java.util.Date(roundedToMinutes+60*1000-1)
-      logger.debug(roundedToMinutes.toString)
       val now = sdf.format(nowMilis)
       val nowPlusMinute = sdf.format(nowPlusMinuteMilis)
 
       val queryString = "SELECT * FROM schedule WHERE `event_time` BETWEEN '"+now+"' AND '"+nowPlusMinute+"'"
-      logger.debug(queryString)
 
       val resultSet = statement.executeQuery(queryString)
       while (resultSet.next()) {

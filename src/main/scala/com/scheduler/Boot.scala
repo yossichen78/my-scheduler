@@ -44,6 +44,3 @@ object Boot extends App with LazyLogging {
   IO(Http) ? Http.Bind(service, interface = host, port = port)
 }
 
-object MySchedule {
-  def events = List[ScheduleEntryJson]()
-}

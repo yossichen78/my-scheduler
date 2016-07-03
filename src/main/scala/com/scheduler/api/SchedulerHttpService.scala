@@ -30,7 +30,6 @@ object JsonImplicits extends DefaultJsonProtocol { // required for the marshalle
         decompressRequest() {
           entity(as[ScheduleEntryJson]) { entry => //todo: more detailed marshalling to get real case class
             detach() {
-              logger.debug("API received event: "+entry.toString)
               schedulerService.handlePostRequest(entry) match {
                 case entry: ScheduleEntryJson =>
                   complete (StatusCodes.Created, "Event Received")

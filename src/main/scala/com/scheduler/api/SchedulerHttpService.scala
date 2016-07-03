@@ -4,7 +4,7 @@ import akka.actor.Actor
 import com.scheduler.dao.{SelectException, InsertException, ConnectionException}
 import com.scheduler.domain.{SchedulerService, ScheduleEntryJson}
 import com.typesafe.scalalogging.LazyLogging
-import spray.http.{StatusCodes, HttpResponse}
+import spray.http.StatusCodes
 import spray.http.MediaTypes._
 import spray.routing._
 import spray.json.DefaultJsonProtocol

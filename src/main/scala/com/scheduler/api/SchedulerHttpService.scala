@@ -15,8 +15,7 @@ class SchedulerHttpServiceActor extends Actor with SchedulerHttpService  {
   def receive = runRoute(myRoute)
 }
 
-object JsonImplicits extends DefaultJsonProtocol {
-
+object JsonImplicits extends DefaultJsonProtocol { // required for the marshaller
   implicit val impEntry = jsonFormat4(ScheduleEntryJson)
 }
 
@@ -46,7 +45,6 @@ object JsonImplicits extends DefaultJsonProtocol {
           // XML is marshalled to `text/xml` by default, so we simply override here
 
           complete {
-            logger.debug("get request!!")
             val entries = schedulerService.handleGetRequest
 
             <html>

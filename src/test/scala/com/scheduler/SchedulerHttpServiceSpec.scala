@@ -1,15 +1,11 @@
 package com.scheduler
 
 import com.scheduler.api.SchedulerHttpService
-import com.scheduler.domain.ScheduleEntryJson
 import com.typesafe.scalalogging.LazyLogging
 import org.specs2.mutable.Specification
-import spray.json.DefaultJsonProtocol
 import spray.testkit.Specs2RouteTest
 import spray.http._
 import StatusCodes._
-import spray.httpx.SprayJsonSupport._
-import spray.json.DefaultJsonProtocol._
 
 class SchedulerHttpServiceSpec extends Specification with Specs2RouteTest with SchedulerHttpService with LazyLogging {
   def actorRefFactory = system
@@ -50,7 +46,6 @@ class SchedulerHttpServiceSpec extends Specification with Specs2RouteTest with S
         responseAs[String] must contain("Request entity expected but not supplied")
       }
     }
-
 
     "POST Json with valid fields should be accepted" in {
       Post("/", HttpEntity(MediaTypes.`application/json`,

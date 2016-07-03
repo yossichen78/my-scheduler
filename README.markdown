@@ -8,7 +8,7 @@ Follow these steps to get started:
 
 1. Git-clone this repository.
 
-        $ git clone git://github.com/spray/spray-template.git my-project
+        $ git clone https://github.com/yossichen78/my-scheduler.git
 
 2. Create DB on mysql, create a new db called "scheduler". The schema for the table is @ resources/db/schema.sql
 

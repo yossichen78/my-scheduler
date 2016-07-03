@@ -4,6 +4,7 @@ import akka.actor.Actor
 import com.scheduler.dao.{SelectException, InsertException, ConnectionException}
 import com.scheduler.domain.{SchedulerService, ScheduleEntryJson}
 import com.typesafe.scalalogging.LazyLogging
+import spray.http.{StatusCodes, HttpResponse}
 import spray.http.MediaTypes._
 import spray.routing._
 import spray.json.DefaultJsonProtocol
@@ -25,16 +26,16 @@ object JsonImplicits extends DefaultJsonProtocol {
   val myRoute = handleExceptions(myExceptionHandler) {
     import JsonImplicits._
 
-    path("") { //sends events to the schedule
-      post {
+    path("") {
+      post { // POST events to the schedule
         decompressRequest() {
-          entity(as[ScheduleEntryJson]) { entry =>
+          entity(as[ScheduleEntryJson]) { entry => //todo: more detailed marshalling to get real case class
             detach() {
-              complete {
-                logger.debug("API received event: "+entry.toString)
-                schedulerService.handlePostRequest(entry) match {
-                  case entry: ScheduleEntryJson => "Event Received"
-                }
+              logger.debug("API received event: "+entry.toString)
+              schedulerService.handlePostRequest(entry) match {
+                case entry: ScheduleEntryJson =>
+                  complete (StatusCodes.Created, "Event Received")
+
               }
             }
           }
@@ -82,24 +83,24 @@ object JsonImplicits extends DefaultJsonProtocol {
   }
 
 
-   implicit def myExceptionHandler: ExceptionHandler =
-     ExceptionHandler {
-       case exception: ConnectionException =>
-         logger.error(s"ConnectionException", exception)
-         complete("ConnectionException: "+exception.getMessage)
-       case exception: InsertException =>
-         logger.error(s"InsertException", exception)
-         complete("InsertException: "+exception.getMessage)
-       case exception: SelectException =>
-         logger.error(s"SelectException", exception)
-         complete("SelectException: "+exception.getMessage)
-       case exception: IllegalArgumentException =>
-         logger.error(s"Invalid value", exception)
-         complete("IllegalArgumentException: "+exception.getMessage)
-       case _ : Exception =>
-         logger.error(s"Unknown Error")
-         complete("Unknown Error")
-     }
+ implicit def myExceptionHandler: ExceptionHandler =
+   ExceptionHandler {
+     case exception: ConnectionException =>
+       logger.error(s"ConnectionException", exception)
+       complete(StatusCodes.InternalServerError, "ConnectionException: "+exception.getMessage)
+     case exception: InsertException =>
+       logger.error(s"InsertException", exception)
+       complete(StatusCodes.InternalServerError, "InsertException: "+exception.getMessage)
+     case exception: SelectException =>
+       logger.error(s"SelectException", exception)
+       complete(StatusCodes.InternalServerError, "SelectException: "+exception.getMessage)
+     case exception: IllegalArgumentException =>
+       logger.error(s"Invalid value", exception)
+       complete(StatusCodes.BadRequest, "IllegalArgumentException: "+exception.getMessage)
+     case e : Exception =>
+       logger.error(s"Unknown Error",e)
+       complete(StatusCodes.InternalServerError, "Unknown Error")
+   }
 
 }
 

@@ -1,6 +1,8 @@
 ## _spray_ My Scheduler
 
-For this project I used Spray and MySQL.
+For this project I used Spray and MySQL. Notes: for production I would use a framework for the DB (ie Slick).
+
+I would write more extensive and separate Unit/Integration tests for the DB and api.
 
 Follow these steps to get started:
 
@@ -31,16 +33,19 @@ Follow these steps to get started:
 8. To view all events on the DB Browse to [http://localhost:8080](http://localhost:8080/)
 
 9. To add events POST an event json to [http://localhost:8080](http://localhost:8080/)
-example:
-{
-     "creator_name":"yoss",
-     "event_type":"clear_cache",
-     "event_target":"resource1",
-     "event_time":"2016-07-01 05:13:00"
- } 
 
-all fields are mandatory, event type should be "welcome_email" | "clear_cache" | "meeting_reminder".
-event_time should be a timestamp string in the format "YYYY-MM-DD hh-mm-ss".
+    example:
+    
+       {
+            "creator_name":"yoss",
+            "event_type":"clear_cache",
+            "event_target":"resource1",
+            "event_time":"2016-07-01 05:13:00"
+       } 
+
+    * all fields are mandatory, event_type should be "welcome_email" | "clear_cache" | "meeting_reminder".
+    
+    event_time should be a timestamp string in the format "YYYY-MM-DD hh-mm-ss".
 
 10. Stop the application:
 

@@ -5,6 +5,7 @@ import akka.actor.{ActorSystem, Props}
 import akka.io.IO
 import com.scheduler.api.SchedulerHttpServiceActor
 import com.scheduler.domain.{ScheduleEntryJson, EventReaderActor}
+import com.typesafe.config.ConfigFactory
 import com.typesafe.scalalogging.LazyLogging
 import spray.can.Http
 import akka.pattern.ask
@@ -37,8 +38,10 @@ object Boot extends App with LazyLogging {
 
   // start a new HTTP server
 
-  lazy val host = Option(System.getenv("VCAP_APP_HOST")).getOrElse("localhost")
-  lazy val port = Option(System.getenv("VCAP_APP_PORT")).getOrElse("8080").toInt
+  val conf = ConfigFactory.load()
+  val server = conf.getConfig("env")
+  val host = server.getString("host")
+  val port = server.getInt("port")
 
   IO(Http) ? Http.Bind(service, interface = host, port = port)
 }

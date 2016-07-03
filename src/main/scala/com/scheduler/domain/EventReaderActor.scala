@@ -15,6 +15,15 @@ class EventReaderActor extends Actor with LazyLogging {
       logger.debug("found "+list.length+" events")
       for (item <- list) yield {
         logger.debug(item.toString)
+        item.event_type match {
+          case "welcome_email" => //todo: these call to the the email service etc
+            logger.info("Sending a welcome email to "+item.event_target)
+          case "clear_cache" =>
+            logger.info("Clearing cache from "+item.event_target)
+          case "meeting_reminder" =>
+            logger.info("Sending a reminder for meeting between "+item.creator_name+" and "+item.event_target)
+        }
+
       }
   }
 }

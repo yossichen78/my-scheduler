@@ -86,7 +86,7 @@ object ScheduleDao extends LazyLogging {
     } catch {
       case e: Exception =>
         logger.error("SelectException", e)
-        throw InsertException("failed to select events")
+        throw SelectException("failed to select events")
     }
     connection.close()
     list
@@ -111,7 +111,7 @@ object ScheduleDao extends LazyLogging {
     } catch {
       case e: Exception =>
         logger.error("SelectException", e)
-        throw InsertException("failed to select events")
+        throw SelectException("failed to select events")
     }
     connection.close()
     list

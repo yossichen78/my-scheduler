@@ -1,4 +1,4 @@
-## _spray_ My Scheduler
+## My Scheduler
 
 For this project I used Spray and MySQL. Notes: for production I would use a framework for the DB (ie Slick).
 

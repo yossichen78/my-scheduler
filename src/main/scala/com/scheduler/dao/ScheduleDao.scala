@@ -64,10 +64,13 @@ object ScheduleDao extends LazyLogging {
       // create the statement, and run the select query
       val statement = connection.createStatement()
 
-      val yourmilliseconds = System.currentTimeMillis()
+      val currentMiliseconds = System.currentTimeMillis()
+      val roundedToMinutes = Math.floor(currentMiliseconds/(60*1000)).toLong * 60*1000
+
       val sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
-      val nowMilis = new java.util.Date(yourmilliseconds)
-      val nowPlusMinuteMilis = new java.util.Date(yourmilliseconds+60*1000)
+      val nowMilis = new java.util.Date(roundedToMinutes)
+      val nowPlusMinuteMilis = new java.util.Date(roundedToMinutes+60*1000-1)
+      logger.debug(roundedToMinutes.toString)
       val now = sdf.format(nowMilis)
       val nowPlusMinute = sdf.format(nowPlusMinuteMilis)
 

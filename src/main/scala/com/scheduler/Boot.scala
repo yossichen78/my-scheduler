@@ -24,8 +24,6 @@ object Boot extends App with LazyLogging {
   // create the schedule checker actor.
   val eventReaderActor = system.actorOf(Props(classOf[EventReaderActor]))
 
-
-
   // call the schedule checker actor and tell it to check the schedule db once a minute.
   val cancellable =
     system.scheduler.schedule(

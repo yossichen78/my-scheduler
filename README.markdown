@@ -9,14 +9,14 @@ Follow these steps to get started:
 2. Create DB on mysql: create a new db called "scheduler" and "scheduler-test". Create table on both DBs using resources/db/schema.sql
 
 3. Setup resources/application.conf :
+
+   Default host and port for the environment are "localhost"/"8080".
     
    Default Username and Password for both DBs are set to "user"/"password".
    
    DB URI is jdbc:mysql://localhost:8889/scheduler
- 
-   Default host and port are "localhost"/"8080".
-   
-   All of these values can be changed by editing application.conf. There are two of these - at the main and test folders.
+    
+   All of these values can be changed at application.conf. There are two of these - at the main and test folders.
 
 4. Change directory into your clone:
 

@@ -61,7 +61,6 @@ class SchedulerHttpServiceSpec extends Specification with Specs2RouteTest with S
     }
 
 
-
     "POST Json must contain mandatory fields" in {
       Post("/", HttpEntity(MediaTypes.`application/json`,
         """{"creatorr_name":"foo", "event_type":"clear_cache", "event_target":"resource1", "event_time":"0-07-03 22:33:33" }""")

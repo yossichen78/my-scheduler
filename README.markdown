@@ -1,18 +1,16 @@
 ## My Scheduler
 
-For this project I used Spray and MySQL. Notes: for production I would use a framework for the DB (ie Slick).
-
-I would write more extensive and separate Unit/Integration tests for the DB and api.
-
 Follow these steps to get started:
 
 1. Git-clone this repository.
 
         $ git clone https://github.com/yossichen78/my-scheduler.git
 
-2. Create DB on mysql, create a new db called "scheduler". The schema for the table is @ resources/db/schema.sql
+2. Create DB on mysql: create a new db called "scheduler" and "scheduler-test". Create table on both DBs using resources/db/schema.sql
 
-3. Username and Password are set to user/password, but this as well as the DB connection settings can be changed @ resources/application.conf
+3. Username and Password for both DBs are set to "user"/"password", but these as well as the other DB connection settings can be changed.
+ 
+   They are set-up at resources/application.conf (main and test have separate files).
    
 4. Change directory into your clone:
 

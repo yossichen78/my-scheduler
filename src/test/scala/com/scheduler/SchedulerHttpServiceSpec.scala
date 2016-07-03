@@ -1,5 +1,7 @@
 package com.scheduler
 
+import java.text.SimpleDateFormat
+
 import com.scheduler.api.SchedulerHttpService
 import com.typesafe.scalalogging.LazyLogging
 import org.specs2.mutable.Specification
@@ -47,9 +49,14 @@ class SchedulerHttpServiceSpec extends Specification with Specs2RouteTest with S
       }
     }
 
+    val currentMiliseconds = System.currentTimeMillis()
+    val sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+    val nowString = sdf.format(currentMiliseconds)
+
     "POST Json with valid fields should be accepted" in {
+      logger.debug(nowString)
       Post("/", HttpEntity(MediaTypes.`application/json`,
-        """{"creator_name":"foo", "event_type":"clear_cache", "event_target":"resource1", "event_time":"2016-04-11 2:24:56" }""")
+        """{"creator_name":"foo", "event_type":"clear_cache", "event_target":"resource1", "event_time":""""+nowString+"""" }""")
       ) ~> sealRoute(myRoute) ~> check {
         logger.debug(responseAs[String])
 
@@ -58,9 +65,11 @@ class SchedulerHttpServiceSpec extends Specification with Specs2RouteTest with S
       }
     }
 
+
+
     "POST Json must contain mandatory fields" in {
       Post("/", HttpEntity(MediaTypes.`application/json`,
-        """{"creatorr_name":"foo", "event_type":"clear_cache", "event_target":"resource1", "event_time":"2016-04-11 2:24:56" }""")
+        """{"creatorr_name":"foo", "event_type":"clear_cache", "event_target":"resource1", "event_time":"0-07-03 22:33:33" }""")
       ) ~> sealRoute(myRoute) ~> check {
         logger.debug(responseAs[String])
 
@@ -68,6 +77,14 @@ class SchedulerHttpServiceSpec extends Specification with Specs2RouteTest with S
         responseAs[String] must contain("Object is missing required member 'creator_name")
       }
     }
+
+    "GET should show newly created event" in {
+      Get() ~> myRoute ~> check {
+        responseAs[String] must contain(nowString)
+      }
+    }
+
+
 
     "POST Json must contain valid YYYY-MM-DD hh:mm:ss date" in {
       Post("/", HttpEntity(MediaTypes.`application/json`,
@@ -79,11 +96,6 @@ class SchedulerHttpServiceSpec extends Specification with Specs2RouteTest with S
         responseAs[String] must contain("Timestamp format must be yyyy-mm-dd hh:mm:ss")
       }
     }
-
-    // DB test:
-
-    // todo: remove test entries from db (and use a separate DB for testing!)
-
 
 
   }
